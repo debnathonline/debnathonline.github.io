@@ -2,23 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chandranath Debnath | Business Analyst Portfolio</title>
   <style>
+    /* Base styles */
+    :root {
+      --primary: #0d6efd;
+      --secondary: #6c757d;
+      --success: #198754;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --background: #f8f9fa;
+      --text: #212529;
+      --card-bg: white;
+      --shadow: rgba(0,0,0,0.1);
+      --header-bg: #0d6efd;
+      --footer-bg: #212529;
+      --footer-text: white;
+    }
+
+    body.dark {
+      --background: #121212;
+      --text: #f1f1f1;
+      --card-bg: #1f1f1f;
+      --shadow: rgba(255,255,255,0.1);
+      --header-bg: #1f1f1f;
+      --footer-bg: #000;
+      --footer-text: #f1f1f1;
+    }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f8f9fa;
-      color: #212529;
+      background: var(--background);
+      color: var(--text);
       transition: background 0.3s, color 0.3s;
     }
+
     header {
-      background: #0d6efd;
+      background: var(--header-bg);
       color: white;
-      padding: 2rem;
+      padding: 2rem 1rem;
       text-align: center;
       position: relative;
     }
+
+    header img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid white;
+      margin-bottom: 1rem;
+    }
+
     #theme-toggle {
       position: absolute;
       top: 1rem;
@@ -28,93 +66,403 @@
       border-radius: 5px;
       cursor: pointer;
       background: white;
-      color: #0d6efd;
+      color: var(--primary);
       font-weight: bold;
     }
+
+    body.dark #theme-toggle {
+      background: var(--primary);
+      color: white;
+    }
+
     section {
       padding: 2rem;
       max-width: 900px;
       margin: auto;
     }
-    h2 { color: #0d6efd; }
-    .card {
-      background: white;
-      padding: 1rem;
-      margin: 1rem 0;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      transition: background 0.3s, color 0.3s;
+
+    h2 { 
+      color: var(--primary);
+      position: relative;
+      display: inline-block;
     }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--primary);
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s, color 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px var(--shadow);
+    }
+
     footer {
-      background: #212529;
-      color: white;
+      background: var(--footer-bg);
+      color: var(--footer-text);
       text-align: center;
-      padding: 1rem;
+      padding: 1.5rem;
       margin-top: 2rem;
     }
 
-    /* 🌙 Dark mode styles */
-    body.dark {
-      background: #121212;
-      color: #f1f1f1;
+    /* Progress bar */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      z-index: 1000;
     }
-    body.dark header {
-      background: #1f1f1f;
-      color: #f1f1f1;
+
+    .progress-bar {
+      height: 4px;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.2s;
     }
-    body.dark h2 {
-      color: #0dcaf0;
+
+    /* Skills visualization */
+    .skills-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
     }
-    body.dark .card {
-      background: #1f1f1f;
-      color: #f1f1f1;
-      box-shadow: 0 2px 6px rgba(255,255,255,0.1);
+
+    .skill-category {
+      margin-bottom: 1.5rem;
     }
-    body.dark footer {
-      background: #000;
+
+    .skill-item {
+      margin-bottom: 1rem;
     }
-    body.dark #theme-toggle {
-      background: #0d6efd;
+
+    .skill-name {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-bar {
+      height: 8px;
+      background: #e9ecef;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .skill-progress {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 1s ease;
+    }
+
+    /* Project filters */
+    .project-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--primary);
       color: white;
+    }
+
+    /* Contact form */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      background: var(--card-bg);
+      color: var(--text);
+      transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    textarea.form-control {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #0b5ed7;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 1rem 1.5rem;
+      background: var(--success);
+      color: white;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 1050;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      section {
+        padding: 1.5rem;
+      }
+      
+      header {
+        padding: 1.5rem 1rem;
+      }
+      
+      #theme-toggle {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-bottom: 1rem;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Reading progress bar -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
   <header>
+    <button id="theme-toggle">🌙 Dark Mode</button>
+    <img src="profile.jpg" alt="Chandranath Debnath">
     <h1>Chandranath Debnath</h1>
     <p>Business Analyst | Agile | Data-Driven Problem Solver</p>
-    <button id="theme-toggle">🌙 Dark Mode</button>
   </header>
 
-  <section>
+  <section id="about">
     <h2>About Me</h2>
-    <p>I am a Business Analyst with expertise in Agile methodology, process improvement, and data-driven insights. Skilled in JIRA, SQL, Tableau, and requirement gathering.</p>
+    <p>I am a Business Analyst with expertise in Agile methodology, process improvement, and data-driven insights. Skilled in JIRA, SQL, Tableau, and requirement gathering with over 5 years of experience transforming business needs into effective technical solutions.</p>
   </section>
 
-  <section>
+  <section id="projects">
     <h2>Projects</h2>
-    <div class="card">
+    
+    <div class="project-filters">
+      <button class="filter-btn active" data-filter="all">All Projects</button>
+      <button class="filter-btn" data-filter="banking">Banking</button>
+      <button class="filter-btn" data-filter="data-vis">Data Visualization</button>
+      <button class="filter-btn" data-filter="process">Process Improvement</button>
+    </div>
+    
+    <div class="card" data-category="banking">
       <h3>Banking Process Automation</h3>
       <p>Analyzed workflows, identified inefficiencies, and created user stories that reduced process time by 25%.</p>
+      <button class="btn project-detail-btn">View Details</button>
     </div>
-    <div class="card">
+    <div class="card" data-category="data-vis">
       <h3>Data Dashboard for Stakeholders</h3>
       <p>Developed a Tableau dashboard to track KPIs, improving decision-making speed by 30%.</p>
+      <button class="btn project-detail-btn">View Details</button>
+    </div>
+    <div class="card" data-category="process">
+      <h3>Supply Chain Optimization</h3>
+      <p>Redesigned inventory management processes, reducing stockouts by 40% and cutting carrying costs by 18%.</p>
+      <button class="btn project-detail-btn">View Details</button>
     </div>
   </section>
 
-  <section>
+  <section id="skills">
     <h2>Skills & Tools</h2>
-    <ul>
-      <li>SQL, Tableau, Excel</li>
-      <li>JIRA, Confluence</li>
-      <li>Agile & Scrum methodologies</li>
-      <li>Requirement Gathering & Analysis</li>
-    </ul>
+    
+    <div class="skills-container">
+      <div class="skill-category">
+        <h3>Technical Skills</h3>
+        <div class="skill-item">
+          <div class="skill-name">
+            <span>SQL</span>
+            <span>90%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" data-width="90%"></div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">
+            <span>Tableau</span>
+            <span>85%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" data-width="85%"></div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">
+            <span>Excel</span>
+            <span>95%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" data-width="95%"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="skill-category">
+        <h3>Business Analysis</h3>
+        <div class="skill-item">
+          <div class="skill-name">
+            <span>Requirements Gathering</span>
+            <span>92%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" data-width="92%"></div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">
+            <span>Process Mapping</span>
+            <span>88%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" data-width="88%"></div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">
+            <span>Stakeholder Management</span>
+            <span>90%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" data-width="90%"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="skill-category">
+        <h3>Methodologies</h3>
+        <div class="skill-item">
+          <div class="skill-name">
+            <span>Agile</span>
+            <span>85%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" data-width="85%"></div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">
+            <span>Scrum</span>
+            <span>80%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" data-width="80%"></div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">
+            <span>Waterfall</span>
+            <span>75%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress" data-width="75%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section>
+  <section id="testimonials">
+    <h2>Testimonials</h2>
+    <div class="card">
+      <blockquote>
+        "Chandranath's analysis of our banking processes identified key inefficiencies we had overlooked for years. His recommendations saved us over $200K annually."
+        <footer>- Project Manager, Banking Client</footer>
+      </blockquote>
+    </div>
+    <div class="card">
+      <blockquote>
+        "The dashboard Chandranath created transformed our monthly reporting process from a 3-day effort to a real-time activity accessible to all stakeholders."
+        <footer>- Director of Operations, Retail Client</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <section id="contact">
     <h2>Contact</h2>
+    <div class="card">
+      <form id="contact-form">
+        <div class="form-group">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" id="name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="message" class="form-label">Message</label>
+          <textarea id="message" class="form-control" required></textarea>
+        </div>
+        <button type="submit" class="btn">Send Message</button>
+      </form>
+    </div>
+    
     <p>Email: <a href="mailto:cd.nbu10@gmail.com">cd.nbu10@gmail.com</a></p>
     <p>LinkedIn: <a href="https://www.linkedin.com/in/chandranath-debnath/" target="_blank">linkedin.com/in/chandranath-debnath</a></p>
     <p><a href="resume.pdf" download>📄 Download Resume</a></p>
@@ -124,14 +472,120 @@
     <p>© 2025 Chandranath Debnath</p>
   </footer>
 
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">Message sent successfully!</div>
+
   <script>
+    // Theme toggle functionality
     const toggleButton = document.getElementById("theme-toggle");
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+    const currentTheme = localStorage.getItem("theme");
+    
+    // Set initial theme
+    if (currentTheme === "dark" || (!currentTheme && prefersDarkScheme.matches)) {
+      document.body.classList.add("dark");
+      toggleButton.textContent = "☀️ Light Mode";
+    } else {
+      toggleButton.textContent = "🌙 Dark Mode";
+    }
+    
     toggleButton.addEventListener("click", () => {
       document.body.classList.toggle("dark");
-      if (document.body.classList.contains("dark")) {
+      const theme = document.body.classList.contains("dark") ? "dark" : "light";
+      localStorage.setItem("theme", theme);
+      
+      if (theme === "dark") {
         toggleButton.textContent = "☀️ Light Mode";
       } else {
         toggleButton.textContent = "🌙 Dark Mode";
+      }
+    });
+
+    // Reading progress bar
+    window.addEventListener("scroll", () => {
+      const winHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      const scrolled = window.scrollY;
+      const progress = (scrolled / (docHeight - winHeight)) * 100;
+      document.getElementById("progress-bar").style.width = `${progress}%`;
+    });
+
+    // Animate skill bars when in viewport
+    const skillBars = document.querySelectorAll('.skill-progress');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const width = entry.target.getAttribute('data-width');
+          entry.target.style.transform = `scaleX(${parseInt(width)/100})`;
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    
+    skillBars.forEach(bar => {
+      observer.observe(bar);
+    });
+
+    // Project filtering
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('#projects .card');
+    
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Update active button
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        // Filter projects
+        const filter = button.getAttribute('data-filter');
+        
+        projectCards.forEach(card => {
+          if (filter === 'all' || card.getAttribute('data-category') === filter) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Project detail buttons
+    const projectDetailButtons = document.querySelectorAll('.project-detail-btn');
+    
+    projectDetailButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const projectTitle = button.parentElement.querySelector('h3').textContent;
+        alert(`More details about "${projectTitle}" would be displayed here. This could open a modal with full project details.`);
+      });
+    });
+
+    // Contact form validation
+    const contactForm = document.getElementById('contact-form');
+    const toast = document.getElementById('toast');
+    
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Basic validation
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+      
+      if (name && email && message) {
+        // In a real implementation, you would send this data to a server
+        console.log('Form submitted:', { name, email, message });
+        
+        // Show success message
+        toast.classList.add('show');
+        
+        // Reset form
+        contactForm.reset();
+        
+        // Hide toast after 3 seconds
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3000);
       }
     });
   </script>
